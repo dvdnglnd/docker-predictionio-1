@@ -5,8 +5,9 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+ENV SCALA_VERSION 2.11.8
 ENV PIO_VERSION 0.12.0
-ENV SPARK_VERSION 2.2.0
+ENV SPARK_VERSION 2.1.2
 ENV ELASTICSEARCH_VERSION 5.6.3
 ENV HBASE_VERSION 1.3.1
 
@@ -16,7 +17,8 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 RUN curl -O http://apache.mirrors.hoobly.com/incubator/predictionio/${PIO_VERSION}-incubating/apache-predictionio-${PIO_VERSION}-incubating.tar.gz \
     && tar zxvf apache-predictionio-${PIO_VERSION}-incubating.tar.gz -C / \
-    && rm apache-predictionio-${PIO_VERSION}-incubating.tar.gz
+    && rm apache-predictionio-${PIO_VERSION}-incubating.tar.gz \
+    && ./make-distribution.sh -Dscala.version=${SCALA_VERSION} -Dspark.version=${SPARK_VERSION} -Delasticsearch.version=${ELASTICSEARCH_VERSION}
 COPY files/pio-env.sh ${PIO_HOME}/conf/pio-env.sh
 RUN mkdir -p ${PIO_HOME}/vendors
 
