@@ -8,7 +8,7 @@ RUN apt-get update \
 ENV SCALA_VERSION 2.11.8
 ENV PIO_VERSION 0.12.0
 ENV SPARK_VERSION 2.1.2
-ENV ELASTICSEARCH_VERSION 5.6.3
+ENV ELASTICSEARCH_VERSION 5.3.0
 ENV HBASE_VERSION 1.3.1
 
 ENV PIO_HOME /PredictionIO-${PIO_VERSION}-incubating
@@ -19,12 +19,13 @@ RUN curl -O http://apache.mirrors.hoobly.com/incubator/predictionio/${PIO_VERSIO
     && tar zxvf apache-predictionio-${PIO_VERSION}-incubating.tar.gz -C / \
     && rm apache-predictionio-${PIO_VERSION}-incubating.tar.gz \
     && ./make-distribution.sh -Dscala.version=${SCALA_VERSION} -Dspark.version=${SPARK_VERSION} -Delasticsearch.version=${ELASTICSEARCH_VERSION}
+RUN tar zxvf PredictionIO-${PIO_VERSION}-incubating.tar.gz
 COPY files/pio-env.sh ${PIO_HOME}/conf/pio-env.sh
 RUN mkdir -p ${PIO_HOME}/vendors
 
-RUN curl -O http://d3kbcqa49mib13.cloudfront.net/spark-${SPARK_VERSION}-bin-hadoop2.6.tgz \
-    && tar -xvzf spark-${SPARK_VERSION}-bin-hadoop2.6.tgz -C ${PIO_HOME}/vendors \
-    && rm spark-${SPARK_VERSION}-bin-hadoop2.6.tgz
+RUN curl -O http://mirror.cc.columbia.edu/pub/software/apache/spark/spark-2.1.2/spark-2.1.2-bin-hadoop2.7.tgz \
+    && tar -xvzf spark-${SPARK_VERSION}-bin-hadoop2.7.tgz -C ${PIO_HOME}/vendors \
+    && rm spark-${SPARK_VERSION}-bin-hadoop2.7.tgz
 
 RUN curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz \
     && tar -xvzf elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz -C ${PIO_HOME}/vendors \
